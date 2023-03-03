@@ -212,4 +212,25 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'seeders' => [
+        'super_admin' => [
+            'first_name' => env('SUPER_ADMIN_USER_FIRST_NAME'),
+            'last_name' => env('SUPER_ADMIN_USER_LAST_NAME'),
+            'email' => env('SUPER_ADMIN_USER_EMAIL'),
+            'password' => env('SUPER_ADMIN_USER_PASSWORD'),
+        ],
+        'admin' => [
+            'first_name' => env('ADMIN_USER_FIRST_NAME'),
+            'last_name' => env('ADMIN_USER_LAST_NAME'),
+            'email' => env('ADMIN_USER_EMAIL'),
+            'password' => env('ADMIN_USER_PASSWORD'),
+        ],
+        'developer' => [
+            'first_name' => env('DEVELOPER_USER_FIRST_NAME'),
+            'last_name' => env('DEVELOPER_USER_LAST_NAME'),
+            'email' => env('DEVELOPER_USER_EMAIL'),
+            'password' => env('DEVELOPER_USER_PASSWORD'),
+        ],
+    ],
+
 ];

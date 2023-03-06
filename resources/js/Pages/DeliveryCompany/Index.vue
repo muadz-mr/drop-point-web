@@ -27,6 +27,8 @@ const showDialog = (type, data) => {
         showEditDialog.value = true;
     } else if (type === "add") {
         showAddDialog.value = true;
+        selectedItem = null;
+        return;
     }
 
     selectedItem = data;
@@ -71,6 +73,7 @@ const closeDialog = () => {
                     <section class="pt-4 flex flex-wrap gap-4">
                         <!-- List of card -->
                         <div
+                            v-if="items.length > 0"
                             class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg sm:rounded-xl dark:bg-gray-700 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                             v-for="company in items"
                             :key="company.id"
@@ -104,13 +107,17 @@ const closeDialog = () => {
                             </div>
                         </div>
                         <!-- END of list of card -->
+
+                        <NoData v-else refresh-route-name="delivery-companies.index">No Data Available</NoData>
                     </section>
 
                     <Pagination class="mt-12" :links="paginationLinks" />
                 </div>
 
                 <ConfirmationDialog
-                    :item="selectedItem"
+                    delete-route-name="delivery-companies.destroy"
+                    :item-id="selectedItem?.id"
+                    :identifier="selectedItem?.name"
                     :show="showConfirmationDialog"
                     @close="closeDialog"
                 />

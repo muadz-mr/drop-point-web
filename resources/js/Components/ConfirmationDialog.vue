@@ -5,7 +5,12 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 
-const props = defineProps({ show: Boolean, item: Object });
+const props = defineProps({
+    show: Boolean,
+    deleteRouteName: String,
+    itemId: Number,
+    identifier: String,
+});
 const emit = defineEmits(["close"]);
 
 const form = useForm({
@@ -16,13 +21,13 @@ watch(
     () => props.show,
     () => {
         if (props.show) {
-            form.id = props.item.name;
+            form.id = props.identifier;
         }
     }
 );
 
 const deleteData = () => {
-    form.delete(route("delivery-companies.destroy", props.item.id), {
+    form.delete(route(props.deleteRouteName, props.itemId), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onFinish: () => form.reset(),
@@ -46,7 +51,7 @@ const closeModal = () => {
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Are you sure you want to delete {{ props.item.name }}?
+                    Are you sure you want to delete {{ props.identifier }}?
                 </p>
 
                 <div class="mt-6 flex justify-end">

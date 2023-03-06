@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\DeliveryCompanyController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -31,11 +32,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/delivery-companies', [DeliveryCompanyController::class, 'index'])->name('delivery-companies.index');
-    Route::get('/delivery-companies/{delivery_company}', [DeliveryCompanyController::class, 'edit'])->name('delivery-companies.edit');
-    Route::post('/delivery-companies', [DeliveryCompanyController::class, 'store'])->name('delivery-companies.store');
-    Route::patch('/delivery-companies/{delivery_company}', [DeliveryCompanyController::class, 'update'])->name('delivery-companies.update');
-    Route::delete('/delivery-companies/{delivery_company}', [DeliveryCompanyController::class, 'destroy'])->name('delivery-companies.destroy');
+    Route::prefix('delivery-companies')->name('delivery-companies.')->group(function () {
+        Route::get('/', [DeliveryCompanyController::class, 'index'])->name('index');
+        Route::post('/', [DeliveryCompanyController::class, 'store'])->name('store');
+        Route::patch('/{delivery_company}', [DeliveryCompanyController::class, 'update'])->name('update');
+        Route::delete('/{delivery_company}', [DeliveryCompanyController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('collectors')->name('collectors.')->group(function () {
+        Route::get('/', [CollectorController::class, 'index'])->name('index');
+        Route::post('/', [CollectorController::class, 'store'])->name('store');
+        Route::patch('/{collector}', [CollectorController::class, 'update'])->name('update');
+        Route::delete('/{collector}', [CollectorController::class, 'destroy'])->name('destroy');
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -44,4 +53,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

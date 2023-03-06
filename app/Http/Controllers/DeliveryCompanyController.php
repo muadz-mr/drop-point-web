@@ -26,7 +26,7 @@ class DeliveryCompanyController extends Controller
         ]);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): RedirectResponse
     {
         DeliveryCompany::create($request->validated());
 

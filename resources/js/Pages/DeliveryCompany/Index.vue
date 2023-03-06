@@ -5,6 +5,7 @@ import DangerButton from "@/Components/DangerButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
+import NoData from "@/Components/NoData.vue";
 import CreateForm from "./Partials/CreateForm.vue";
 import EditForm from "./Partials/EditForm.vue";
 import { Head } from "@inertiajs/vue3";
@@ -108,7 +109,11 @@ const closeDialog = () => {
                         </div>
                         <!-- END of list of card -->
 
-                        <NoData v-else refresh-route-name="delivery-companies.index">No Data Available</NoData>
+                        <NoData
+                            v-else
+                            refresh-route-name="delivery-companies.index"
+                            >No Data Available</NoData
+                        >
                     </section>
 
                     <Pagination class="mt-12" :links="paginationLinks" />

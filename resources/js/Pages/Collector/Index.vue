@@ -9,13 +9,13 @@ import NoData from "@/Components/NoData.vue";
 import CreateForm from "./Partials/CreateForm.vue";
 import EditForm from "./Partials/EditForm.vue";
 import { Head } from "@inertiajs/vue3";
-import { usePagination } from "@/composables/pagination";
+// import { usePagination } from "@/composables/pagination";
 import { ref, computed } from "vue";
 
-const props = defineProps({ companies: Object });
-const items = computed(() => props.companies.data);
-const paginationLinks = computed(() => props.companies.links);
-// const { data, pagination } = usePagination(props.companies);
+const props = defineProps({ collectors: Object });
+const items = computed(() => props.collectors.data);
+const paginationLinks = computed(() => props.collectors?.links);
+// const { data, pagination } = usePagination(props.collectors);
 let showConfirmationDialog = ref(false);
 let showEditDialog = ref(false);
 let showAddDialog = ref(false);
@@ -43,14 +43,14 @@ const closeDialog = () => {
 </script>
 
 <template>
-    <Head title="Delivery Companies" />
+    <Head title="Collectors" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Delivery Companies
+                Collectors
             </h2>
         </template>
 
@@ -65,28 +65,32 @@ const closeDialog = () => {
                         <SecondaryButton
                             type="button"
                             class="min-w-max"
-                            @click="showDialog('add', company)"
+                            @click="showDialog('add')"
                         >
                             Add New
                         </SecondaryButton>
                     </section>
 
+                    <!-- List of card here -->
                     <section class="pt-4 flex flex-wrap gap-4">
-                        <!-- List of card -->
                         <div
                             v-if="items.length > 0"
                             class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg sm:rounded-xl dark:bg-gray-700 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-                            v-for="company in items"
-                            :key="company.id"
+                            v-for="collector in items"
+                            :key="collector.id"
                         >
                             <div class="flex flex-col justify-center w-full">
                                 <p
                                     class="text-xl font-medium text-gray-800 dark:text-white"
                                 >
-                                    {{ company.name }}
+                                    {{ collector.name }}
                                 </p>
                                 <p class="pt-1 text-xs text-gray-400">
-                                    {{ company.slug }}
+                                    {{
+                                        collector.phone_no
+                                            ? collector.phone_no
+                                            : "No phone number provided"
+                                    }}
                                 </p>
                             </div>
                             <div
@@ -94,33 +98,28 @@ const closeDialog = () => {
                             >
                                 <DangerButton
                                     class="min-w-max"
-                                    @click="showDialog('delete', company)"
+                                    @click="showDialog('delete', collector)"
                                     >Delete</DangerButton
                                 >
 
                                 <PrimaryButton
                                     type="button"
                                     class="min-w-max"
-                                    @click="showDialog('edit', company)"
+                                    @click="showDialog('edit', collector)"
                                 >
                                     Edit
                                 </PrimaryButton>
                             </div>
                         </div>
-                        <!-- END of list of card -->
 
-                        <NoData
-                            v-else
-                            refresh-route-name="delivery-companies.index"
-                            >No Data Available</NoData
-                        >
+                        <NoData v-else refresh-route-name="collectors.index">No Data Available</NoData>
                     </section>
 
                     <Pagination class="mt-12" :links="paginationLinks" />
                 </div>
 
                 <ConfirmationDialog
-                    delete-route-name="delivery-companies.destroy"
+                    delete-route-name="collectors.destroy"
                     :item-id="selectedItem?.id"
                     :identifier="selectedItem?.name"
                     :show="showConfirmationDialog"

@@ -14,11 +14,10 @@ import { Head } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { ChevronDoubleDownIcon } from "@heroicons/vue/20/solid";
 
-const props = defineProps({ storageLocations: Object, status: Array });
-const items = computed(() => props.storageLocations.data);
-const statusOptions = computed(() => props.status);
-const paginationLinks = computed(() => props.storageLocations?.links);
-// const { data, pagination } = usePagination(props.storageLocations);
+const props = defineProps({ units: Object });
+const items = computed(() => props.units.data);
+const paginationLinks = computed(() => props.units?.links);
+// const { data, pagination } = usePagination(props.units);
 let showConfirmationDialog = ref(false);
 let showEditDialog = ref(false);
 let showAddDialog = ref(false);
@@ -45,24 +44,20 @@ const closeDialog = () => {
     showAddDialog.value = false;
 };
 
-const getStorageLocationStatusDescription = (storageLocationStatus) => {
-    const status = statusOptions.value.filter((status) => {
-        return storageLocationStatus == status.value;
-    });
-
-    return status[0].description;
+const unitName = (unit) => {
+    return unit ? `${unit.block}-${unit.level}-${unit.number}` : '';
 };
 </script>
 
 <template>
-    <Head title="Storage Locations" />
+    <Head title="Units" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Storage Locations
+                Units
             </h2>
         </template>
 
@@ -88,21 +83,14 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                         <div
                             v-if="items.length > 0"
                             class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg dark:bg-gray-700 lg:flex lg:flex-row lg:items-center lg:gap-4"
-                            v-for="storageLocation in items"
-                            :key="storageLocation.id"
+                            v-for="unit in items"
+                            :key="unit.id"
                         >
                             <div class="flex flex-col justify-center">
                                 <p
                                     class="text-xl font-medium text-gray-800 dark:text-white"
                                 >
-                                    {{ storageLocation.name }}
-                                </p>
-                                <p class="pt-1 text-sm text-gray-400">
-                                    {{
-                                        getStorageLocationStatusDescription(
-                                            storageLocation.status
-                                        )
-                                    }}
+                                    {{ unitName(unit) }}
                                 </p>
                             </div>
 
@@ -114,57 +102,23 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                                 }"
                             >
                                 <div class="info">
-                                    <p class="info__header">Building</p>
+                                    <p class="info__header">Block</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.building
-                                                ? storageLocation.building
-                                                : "-"
-                                        }}
+                                        {{ unit.block }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Building Level</p>
+                                    <p class="info__header">Level</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.building_level
-                                                ? storageLocation.building_level
-                                                : "-"
-                                        }}
+                                        {{ unit.level }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Room</p>
+                                    <p class="info__header">Number</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.room
-                                                ? storageLocation.room
-                                                : "-"
-                                        }}
-                                    </p>
-                                </div>
-
-                                <div class="info">
-                                    <p class="info__header">Shelf</p>
-                                    <p class="info__content">
-                                        {{
-                                            storageLocation.shelf
-                                                ? storageLocation.shelf
-                                                : "-"
-                                        }}
-                                    </p>
-                                </div>
-
-                                <div class="info">
-                                    <p class="info__header">Space</p>
-                                    <p class="info__content">
-                                        {{
-                                            storageLocation.space
-                                                ? storageLocation.space
-                                                : "-"
-                                        }}
+                                        {{ unit.number }}
                                     </p>
                                 </div>
                             </div>
@@ -192,26 +146,21 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
 
                                 <DangerButton
                                     class="min-w-max"
-                                    @click="
-                                        showDialog('delete', storageLocation)
-                                    "
+                                    @click="showDialog('delete', unit)"
                                     >Delete</DangerButton
                                 >
 
                                 <PrimaryButton
                                     type="button"
                                     class="min-w-max"
-                                    @click="showDialog('edit', storageLocation)"
+                                    @click="showDialog('edit', unit)"
                                 >
                                     Edit
                                 </PrimaryButton>
                             </div>
                         </div>
 
-                        <NoData
-                            v-else
-                            refresh-route-name="storage-locations.index"
-                        >
+                        <NoData v-else refresh-route-name="units.index">
                             No Data Available
                         </NoData>
                     </section>
@@ -220,23 +169,18 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                 </div>
 
                 <ConfirmationDialog
-                    delete-route-name="storage-locations.destroy"
+                    delete-route-name="units.destroy"
                     :item-id="selectedItem?.id"
-                    :identifier="selectedItem?.name"
+                    :identifier="unitName(selectedItem)"
                     :show="showConfirmationDialog"
                     @close="closeDialog"
                 />
 
-                <CreateForm
-                    :show="showAddDialog"
-                    :status-options="statusOptions"
-                    @close="closeDialog"
-                />
+                <CreateForm :show="showAddDialog" @close="closeDialog" />
 
                 <EditForm
                     :item="selectedItem"
                     :show="showEditDialog"
-                    :status-options="statusOptions"
                     @close="closeDialog"
                 />
             </div>

@@ -28,11 +28,11 @@ const showDialog = (type, data) => {
         showEditDialog.value = true;
     } else if (type === "add") {
         showAddDialog.value = true;
-        selectedItem = null;
+        selectedItem.value = null;
         return;
     }
 
-    selectedItem = data;
+    selectedItem.value = data;
 };
 
 const closeDialog = () => {
@@ -112,7 +112,9 @@ const closeDialog = () => {
                             </div>
                         </div>
 
-                        <NoData v-else refresh-route-name="collectors.index">No Data Available</NoData>
+                        <NoData v-else refresh-route-name="collectors.index">
+                            No Data Available
+                        </NoData>
                     </section>
 
                     <Pagination class="mt-12" :links="paginationLinks" />

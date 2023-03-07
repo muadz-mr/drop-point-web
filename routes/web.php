@@ -4,6 +4,7 @@ use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\DeliveryCompanyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageLocationController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,6 +53,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [StorageLocationController::class, 'store'])->name('store');
         Route::patch('/{storage_location}', [StorageLocationController::class, 'update'])->name('update');
         Route::delete('/{storage_location}', [StorageLocationController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('units')->name('units.')->group(function () {
+        Route::get('/', [UnitController::class, 'index'])->name('index');
+        Route::post('/', [UnitController::class, 'store'])->name('store');
+        Route::patch('/{unit}', [UnitController::class, 'update'])->name('update');
+        Route::delete('/{unit}', [UnitController::class, 'destroy'])->name('destroy');
     });
 });
 

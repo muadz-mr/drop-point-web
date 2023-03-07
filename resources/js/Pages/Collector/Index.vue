@@ -60,7 +60,7 @@ const closeDialog = () => {
                     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6"
                 >
                     <section
-                        class="w-full p-4 flex justify-end bg-gray-50 dark:bg-gray-900 rounded-lg"
+                        class="w-full p-4 flex justify-end bg-gray-50 dark:bg-gray-700/25 rounded-lg"
                     >
                         <SecondaryButton
                             type="button"
@@ -75,7 +75,7 @@ const closeDialog = () => {
                     <section class="pt-4 flex flex-wrap gap-4">
                         <div
                             v-if="items.length > 0"
-                            class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg sm:rounded-xl dark:bg-gray-700 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                            class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg dark:bg-gray-700 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                             v-for="collector in items"
                             :key="collector.id"
                         >
@@ -85,7 +85,7 @@ const closeDialog = () => {
                                 >
                                     {{ collector.name }}
                                 </p>
-                                <p class="pt-1 text-xs text-gray-400">
+                                <p class="pt-1 text-sm text-gray-400">
                                     {{
                                         collector.phone_no
                                             ? collector.phone_no

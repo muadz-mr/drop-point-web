@@ -38,6 +38,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('collectors.index')" :active="route().current('collectors.index')">
                                     Collectors
                                 </NavLink>
+                                <NavLink :href="route('storage-locations.index')" :active="route().current('storage-locations.index')">
+                                    Storage Locations
+                                </NavLink>
                             </div>
                         </div>
 
@@ -126,6 +129,9 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('collectors.index')" :active="route().current('collectors.index')">
                             Collectors
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('storage-locations.index')" :active="route().current('storage-locations.index')">
+                            Storage Locations
                         </ResponsiveNavLink>
                     </div>
 

@@ -7,7 +7,6 @@ import IconButton from "@/Components/IconButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
 import NoData from "@/Components/NoData.vue";
-import InputLabel from "@/Components/InputLabel.vue";
 import CreateForm from "./Partials/CreateForm.vue";
 import EditForm from "./Partials/EditForm.vue";
 import { Head } from "@inertiajs/vue3";
@@ -33,11 +32,11 @@ const showDialog = (type, data) => {
         showEditDialog.value = true;
     } else if (type === "add") {
         showAddDialog.value = true;
-        selectedItem = null;
+        selectedItem.value = null;
         return;
     }
 
-    selectedItem = data;
+    selectedItem.value = data;
 };
 
 const closeDialog = () => {
@@ -212,8 +211,9 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                         <NoData
                             v-else
                             refresh-route-name="storage-locations.index"
-                            >No Data Available</NoData
                         >
+                            No Data Available
+                        </NoData>
                     </section>
 
                     <Pagination class="mt-12" :links="paginationLinks" />

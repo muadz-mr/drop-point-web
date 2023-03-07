@@ -21,7 +21,7 @@ watch(
     () => props.show,
     () => {
         if (props.show) {
-            form.id = props.identifier;
+            form.id = props.itemId;
         }
     }
 );

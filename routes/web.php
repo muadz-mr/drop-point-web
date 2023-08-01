@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\DeliveryCompanyController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageLocationController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,6 +36,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('uploads')->name('uploads.')->group(function () {
+        Route::post('/', [UploadController::class, 'upload'])->name('process');
+        Route::post('/revert', [UploadController::class, 'revert'])->name('revert');
+    });
+
     Route::prefix('delivery-companies')->name('delivery-companies.')->group(function () {
         Route::get('/', [DeliveryCompanyController::class, 'index'])->name('index');
         Route::post('/', [DeliveryCompanyController::class, 'store'])->name('store');
@@ -60,6 +67,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [UnitController::class, 'store'])->name('store');
         Route::patch('/{unit}', [UnitController::class, 'update'])->name('update');
         Route::delete('/{unit}', [UnitController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('packages')->name('packages.')->group(function () {
+        Route::get('/', [PackageController::class, 'index'])->name('index');
+        Route::post('/', [PackageController::class, 'store'])->name('store');
+        Route::patch('/{unit}', [PackageController::class, 'update'])->name('update');
+        Route::delete('/{unit}', [PackageController::class, 'destroy'])->name('destroy');
     });
 });
 

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-defineProps(["modelValue", "options"]);
+const props = defineProps(["modelValue", "options", "valueParameter", "descriptionParameter"]);
 
 defineEmits(["update:modelValue"]);
 
@@ -14,6 +14,14 @@ onMounted(() => {
 });
 
 defineExpose({ focus: () => input.value.focus() });
+
+const optionValue = (option) => {
+    return option[props.valueParameter];
+};
+
+const optionDescription = (option) => {
+    return option[props.descriptionParameter];
+};
 </script>
 
 <template>
@@ -26,9 +34,9 @@ defineExpose({ focus: () => input.value.focus() });
         <option
             v-for="option in options"
             :key="option.id"
-            :value="option.value"
+            :value="optionValue(option)"
         >
-            {{ option.description }}
+            {{ optionDescription(option) }}
         </option>
     </select>
 </template>

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Package;
+use App\Observers\PackageObserver;
 use App\Support\Helper;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Package::observe(PackageObserver::class);
     }
 }

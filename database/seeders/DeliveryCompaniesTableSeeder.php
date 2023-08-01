@@ -17,6 +17,7 @@ class DeliveryCompaniesTableSeeder extends Seeder
     {
         if (Schema::hasTable('delivery_companies')) {
             $companiesData = collect([
+                ['name' => 'Other(s)'],
                 ['name' => 'Pgeon'],
                 ['name' => 'Pos Laju'],
                 ['name' => 'GD Express (GDex)'],

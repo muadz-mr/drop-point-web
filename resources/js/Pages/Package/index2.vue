@@ -14,11 +14,17 @@ import { Head } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { ChevronDoubleDownIcon } from "@heroicons/vue/20/solid";
 
-const props = defineProps({ storageLocations: Object, status: Array });
-const items = computed(() => props.storageLocations.data);
-const statusOptions = computed(() => props.status);
-const paginationLinks = computed(() => props.storageLocations?.links);
-// const { data, pagination } = usePagination(props.storageLocations);
+const props = defineProps({
+    packages: Object,
+    companies: Array,
+    units: Array,
+    locations: Array,
+    // collectors: Array,
+    statusOptions: Array,
+});
+const items = computed(() => props.packages.data);
+const paginationLinks = computed(() => props.packages?.links);
+// const { data, pagination } = usePagination(props.packages);
 let showConfirmationDialog = ref(false);
 let showEditDialog = ref(false);
 let showAddDialog = ref(false);
@@ -45,6 +51,20 @@ const closeDialog = () => {
     showAddDialog.value = false;
 };
 
+const parcelIdentifier = (parcel) => {
+    return parcel
+        ? `${parcel.recipient_unit.block}-${parcel.recipient_unit.level}-${parcel.recipient_unit.number}`
+        : "";
+};
+
+const getStorageLocation = (id) => {
+    const storageLocation = props.locations.filter((storageLocation) => {
+        return id == storageLocation.id;
+    });
+
+    return storageLocation[0].name;
+};
+
 const getStorageLocationStatusDescription = (storageLocationStatus) => {
     const status = statusOptions.value.filter((status) => {
         return storageLocationStatus == status.value;
@@ -55,14 +75,14 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
 </script>
 
 <template>
-    <Head title="Storage Locations" />
+    <Head title="Packages" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
             >
-                Storage Locations
+                Packages
             </h2>
         </template>
 
@@ -88,21 +108,14 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                         <div
                             v-if="items.length > 0"
                             class="w-full p-4 bg-white shadow dark:shadow-gray-900 rounded-lg dark:bg-gray-700 lg:flex lg:flex-row lg:items-center lg:gap-4"
-                            v-for="storageLocation in items"
-                            :key="storageLocation.id"
+                            v-for="parcel in items"
+                            :key="parcel.id"
                         >
                             <div class="flex flex-col justify-center min-w-max">
                                 <p
                                     class="text-xl font-medium text-gray-800 dark:text-white"
                                 >
-                                    {{ storageLocation.name }}
-                                </p>
-                                <p class="pt-1 text-sm text-gray-400">
-                                    {{
-                                        getStorageLocationStatusDescription(
-                                            storageLocation.status
-                                        )
-                                    }}
+                                    {{ parcelIdentifier(parcel) }}
                                 </p>
                             </div>
 
@@ -114,57 +127,58 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                                 }"
                             >
                                 <div class="info">
-                                    <p class="info__header">Building</p>
+                                    <p class="info__header">Delivery Company</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.building
-                                                ? storageLocation.building
-                                                : "-"
-                                        }}
+                                        {{ parcel.delivery_company.name }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Building Level</p>
+                                    <p class="info__header">Package No</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.building_level
-                                                ? storageLocation.building_level
-                                                : "-"
-                                        }}
+                                        {{ parcel.package_no }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Room</p>
+                                    <p class="info__header">Recipient Phone No</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.room
-                                                ? storageLocation.room
-                                                : "-"
-                                        }}
+                                        {{ parcel.recipient_phone_no }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Shelf</p>
+                                    <p class="info__header">Arrived At</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.shelf
-                                                ? storageLocation.shelf
-                                                : "-"
-                                        }}
+                                        {{ parcel.package_no }}
                                     </p>
                                 </div>
 
                                 <div class="info">
-                                    <p class="info__header">Space</p>
+                                    <p class="info__header">Stored At</p>
                                     <p class="info__content">
-                                        {{
-                                            storageLocation.space
-                                                ? storageLocation.space
-                                                : "-"
-                                        }}
+                                        {{ parcel.storage_location.name }}
+                                    </p>
+                                </div>
+
+                                <div class="info">
+                                    <p class="info__header">Collector At</p>
+                                    <p class="info__content">
+                                        {{ parcel.collected_at ? parcel.collected_at : '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="info">
+                                    <p class="info__header">One Time Fee</p>
+                                    <p class="info__content">
+                                        {{ parcel.one_time_storage_fee }}
+                                    </p>
+                                </div>
+
+                                <div class="info">
+                                    <p class="info__header">Daily Fee</p>
+                                    <p class="info__content">
+                                        {{ parcel.daily_storage_fee }}
                                     </p>
                                 </div>
                             </div>
@@ -192,26 +206,21 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
 
                                 <DangerButton
                                     class="min-w-max"
-                                    @click="
-                                        showDialog('delete', storageLocation)
-                                    "
+                                    @click="showDialog('delete', parcel)"
                                     >Delete</DangerButton
                                 >
 
                                 <PrimaryButton
                                     type="button"
                                     class="min-w-max"
-                                    @click="showDialog('edit', storageLocation)"
+                                    @click="showDialog('edit', parcel)"
                                 >
                                     Edit
                                 </PrimaryButton>
                             </div>
                         </div>
 
-                        <NoData
-                            v-else
-                            refresh-route-name="storage-locations.index"
-                        >
+                        <NoData v-else refresh-route-name="packages.index">
                             No Data Available
                         </NoData>
                     </section>
@@ -219,24 +228,26 @@ const getStorageLocationStatusDescription = (storageLocationStatus) => {
                     <Pagination class="mt-12" :links="paginationLinks" />
                 </div>
 
-                <ConfirmationDialog
-                    delete-route-name="storage-locations.destroy"
+                <!-- <ConfirmationDialog
+                    delete-route-name="packages.destroy"
                     :item-id="selectedItem?.id"
-                    :identifier="selectedItem?.name"
+                    :identifier="parcelIdentifier(selectedItem)"
                     :show="showConfirmationDialog"
                     @close="closeDialog"
-                />
+                /> -->
 
                 <CreateForm
                     :show="showAddDialog"
-                    :status-options="statusOptions"
                     @close="closeDialog"
+                    :delivery-companies="companies"
+                    :units="units"
+                    :storage-locations="locations"
+                    :status-options="statusOptions"
                 />
 
                 <EditForm
                     :item="selectedItem"
                     :show="showEditDialog"
-                    :status-options="statusOptions"
                     @close="closeDialog"
                 />
             </div>

@@ -86,7 +86,7 @@ const unitName = (unit) => {
                             v-for="unit in items"
                             :key="unit.id"
                         >
-                            <div class="flex flex-col justify-center">
+                            <div class="flex flex-col justify-center min-w-max">
                                 <p
                                     class="text-xl font-medium text-gray-800 dark:text-white"
                                 >
@@ -190,14 +190,14 @@ const unitName = (unit) => {
 
 <style scoped>
 .info {
-    @apply flex lg:flex-col justify-between lg:justify-start min-w-max;
+    @apply flex lg:flex-col justify-between lg:justify-start;
 }
 
 .info__header {
-    @apply text-base font-medium text-gray-800 dark:text-white;
+    @apply min-w-max text-base font-medium text-gray-800 dark:text-white;
 }
 
 .info__content {
-    @apply pt-1 text-sm text-gray-400;
+    @apply pt-1 text-sm text-right lg:text-left text-gray-400;
 }
 </style>
